@@ -1,5 +1,5 @@
 {
-    "name": "amplify",
+    "name": "@-0/amplify",
     "author": "Logan Powell",
     "license": "MIT",
     "version": "0.0.1",
@@ -18,18 +18,23 @@
         "jsdoc": "jsdoc -c jsdoc/jsdoc.json --verbose --debug",
         "docs": "npm run types && npm run jsdoc",
         "patch": "npm version patch && npm run docs && npm run pages && npm publish",
-        "test": "npm run madge && concurrently \"npm run typewatch\" \"jest --watchAll\"",
+        "delay": "node ./node_modules/npm-delay 60000",
+        "test": "npm run madge && concurrently \"amplify mock\" \"npm run delay && npm run typewatch\" \"npm run delay && npm run jest\"",
         "postgit": "git push origin master && npm run patch",
         "ncu": "ncu -u && npm i && npm audit fix",
         "git": "npm run ncu && git add . && git commit -m",
         "build": "npm run clean && cross-env NODE_ENV=production parcel build client/index.html -d dist --no-source-maps --no-cache --public-url ./",
-        "dev": "concurrently \"npm run typewatch\" \"parcel client/index.html --global md -p 8080 --open -d dist watch\""
+        "dev": "npm run madge && concurrently \"amplify mock\" \"npm run delay && npm run typewatch\" \"parcel client/index.html --global md -p 8080 --open -d dist watch\"",
+        "amplify-modelgen": "node amplify\\scripts\\amplify-modelgen.js",
+        "amplify-push": "node amplify\\scripts\\amplify-push.js"
     },
     "keywords": [],
     "publishConfig": {
         "access": "public"
     },
-    "dependencies": {},
+    "dependencies": {
+        "@aws-amplify/datastore": "^3.0.2"
+    },
     "peerDependencies": {},
     "devDependencies": {
         "@babel/plugin-transform-modules-commonjs": "^7.13.8",
@@ -44,14 +49,19 @@
         "eslint-plugin-jest": "^24.3.5",
         "eslint-plugin-prettier": "^3.3.1",
         "gh-pages": "^3.1.0",
+        "ini": "^1.3.5",
+        "inquirer": "^6.5.1",
         "jest": "^26.6.3",
         "jest-environment-jsdom": "^26.6.2",
         "jsdom": "^16.5.1",
+        "npm-delay": "^1.0.4",
         "prettier": "^2.2.1",
         "ts-jest": "^26.5.4",
         "ts-node": "^9.1.1"
     },
-    "browserslist": [ "last 3 Chrome versions" ],
+    "browserslist": [
+        "last 3 Chrome versions"
+    ],
     "prettier": {
         "singleQuote": false,
         "printWidth": 100,
